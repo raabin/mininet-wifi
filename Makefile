@@ -56,7 +56,7 @@ install-manpages: $(MANPAGES)
 	install -D -t $(MANDIR) $(MANPAGES)
 
 install: install-mnexec install-manpages
-	$(PYTHON) setup.py install
+	/home/rp5dm/work/OpenSource/fleet/.venv/bin/python setup.py install
 
 develop: $(MNEXEC) $(MANPAGES)
 # 	Perhaps we should link these as well
