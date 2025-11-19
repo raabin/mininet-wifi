@@ -20,6 +20,13 @@ from sys import version_info as py_version_info
 if 'PYTHONPATH' in os.environ:
     sys.path = os.environ[ 'PYTHONPATH' ].split(':') + sys.path
 
+bin_dir = os.path.dirname(os.path.abspath(__file__))
+project_root = os.path.abspath(os.path.join(bin_dir, os.pardir))
+mininet_base_dir = os.path.join(project_root, 'mininet')
+
+# 3. Add this directory to the Python search path
+sys.path.insert(0, mininet_base_dir)
+
 from mininet.clean import cleanup
 from mininet.log import lg, LEVELS, info, debug, error, output
 from mininet.net import Mininet, MininetWithControlNet

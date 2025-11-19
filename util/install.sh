@@ -178,6 +178,22 @@ function p4_deps {
 # Install Mininet-WiFi deps
 function wifi_deps {
     echo "Installing Mininet dependencies"
+    
+    # Determine the correct pip installation command prefix and options
+    PIP_BIN="/home/rp5dm/work/OpenSource/fleet/.venv/bin/python -m pip"
+    PIP_INSTALL_OPTS="-e . --no-build-isolation --no-deps"
+    
+    if [ "$DIST" = "Ubuntu" ] &&  [ `expr $RELEASE '>=' 24.04` = "1" ]; then
+        PIP_INSTALL_OPTS+=" --break-system-packages"
+    fi
+
+    PIP_INSTALL_DEPS="install requests six docker python-iptables"
+    if [ "$DIST" = "Ubuntu" ] &&  [ `expr $RELEASE '>=' 24.04` = "1" ]; then
+        PIP_INSTALL_DEPS+=" --break-system-packages"
+    fi
+    echo "Installing core Python dependencies (requests, docker, python-iptables)..."
+    sudo $PIP_BIN $PIP_INSTALL_DEPS
+    
     if [ "$DIST" = "Fedora" -o "$DIST" = "RedHatEnterpriseServer" -o "$DIST" = "CentOS" ]; then
         $install gcc make socat psmisc xterm openssh-clients iperf libnl3-devel \
             iproute telnet python-setuptools libcgroup-tools openssl-devel \
@@ -219,7 +235,10 @@ function wifi_deps {
             sudo ${PYTHON} get-pip.py
             rm get-pip.py
         fi
-        ${PYTHON} -m pip install "numpy<2" FlightRadarAPI pillow bitstring skyfield requests --break-system-packages
+        
+        
+        ${PYTHON} -m pip install "numpy<2" FlightRadarAPI pillow bitstring skyfield --break-system-packages
+        
         $install iproute2 || $install iproute
         $install cgroup-tools || $install cgroup-bin
     fi
@@ -260,6 +279,8 @@ function wifi_deps {
     git clone --depth=1 https://github.com/ramonfontes/mac80211_hwsim_mgmt.git
     pushd $BUILD_DIR/mac80211_hwsim_mgmt
     sudo make install
+    
+    
 }
 
 function babeld {
@@ -558,9 +579,9 @@ function of {
     cd $BUILD_DIR
     $install autoconf automake libtool make gcc patch
     if [ "$DIST" = "Fedora" -o "$DIST" = "RedHatEnterpriseServer" -o "$DIST" = "CentOS" ]; then
-        $install git pkgconfig glibc-devel
+        $install git pkgconfig glibc-devel libbsd-devel
     else
-        $install git-core autotools-dev pkg-config libc6-dev
+        $install git-core autotools-dev pkg-config libc6-dev libbsd-dev
     fi
     if [ "$DIST" = "Ubuntu" ] &&  [ `expr $RELEASE '>=' 24.04` = "1" ]; then
         git clone --depth=1 https://github.com/ramonfontes/openflow
@@ -577,6 +598,9 @@ function of {
     # Resume the install:
     ./boot.sh
     ./configure
+    
+    sed -i.bak '/^LIBS =/ s/$/ -lbsd/' Makefile
+
     make
     sudo make install
     cd $BUILD_DIR
