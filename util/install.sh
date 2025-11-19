@@ -135,7 +135,7 @@ function mn_deps {
       rm -r mininet
     fi
 
-    sudo git clone https://github.com/mininet/mininet.git
+    sudo git clone -b rp5dm https://github.com/raabin/mininet.git
     pushd $MININET_DIR/mininet-wifi/mininet
     if [ "$DIST" = "Ubuntu" ] &&  [ `expr $RELEASE '>=' 24.04` = "1" ]; then
         git reset --hard 6eb8973
@@ -189,8 +189,8 @@ function wifi_deps {
           ethtool help2man ${PYPKG}-pyflakes python3-pylint \
                             python-pep8 ${PYPKG}-pexpect ${PYPKG}-tk
     else
-        pf=pyflakes
-        pep=pep8
+        pf=pyflakes3
+        pep=pycodestyle
         if [ $PYTHON_VERSION == 3 ]; then
             ln -sf python3 /usr/bin/python
         fi
