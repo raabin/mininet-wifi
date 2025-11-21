@@ -146,13 +146,13 @@ function mn_deps {
         git reset --hard 6eb8973
         patch -p0 < $MININET_DIR/mininet-wifi/util/mininet-patches/mininet.patch
     fi
-    #sudo PYTHON=${PYTHON} make install
-    sudo env "PATH=$PATH" "VIRTUAL_ENV=$VIRTUAL_ENV" $PIP_BIN install $PIP_INSTALL_OPTS
+    sudo PYTHON=${PYTHON} make install
+    #sudo env "PATH=$PATH" "VIRTUAL_ENV=$VIRTUAL_ENV" $PIP_BIN install $PIP_INSTALL_OPTS
     popd
     echo "Installing Mininet-wifi core"
     pushd $MININET_DIR/mininet-wifi
-    #sudo PYTHON=${PYTHON} make install
-    sudo env "PATH=$PATH" "VIRTUAL_ENV=$VIRTUAL_ENV" $PIP_BIN install $PIP_INSTALL_OPTS
+    sudo PYTHON=${PYTHON} make install
+    #sudo env "PATH=$PATH" "VIRTUAL_ENV=$VIRTUAL_ENV" $PIP_BIN install $PIP_INSTALL_OPTS
     popd
 }
 
@@ -287,8 +287,7 @@ function wifi_deps {
     fi
     git clone --depth=1 https://github.com/ramonfontes/mac80211_hwsim_mgmt.git
     pushd $BUILD_DIR/mac80211_hwsim_mgmt
-    #sudo make install
-    sudo env "PATH=$PATH" "VIRTUAL_ENV=$VIRTUAL_ENV" $PIP_BIN install $PIP_INSTALL_OPTS
+    sudo make install
     
     
 }
